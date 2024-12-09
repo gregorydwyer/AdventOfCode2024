@@ -240,9 +240,8 @@ namespace AdventOfCode2024
         public static void Problem2()
         {
             Console.WriteLine(Day + " P2");
-            var loops = 0;
             var nextBlock = new Point(OriginalGuardPath[OriginalGuardPath.Count - 1]);
-            var temp = OriginalGuardPath;
+            var loopLocations = new HashSet<Point>();
             OriginalGuardPath.RemoveAt(OriginalGuardPath.Count - 1);
             var originalPathLocations = OriginalGuardPath.ToHashSet();
             var locationCount = OriginalGuardPath.Count;
@@ -258,7 +257,6 @@ namespace AdventOfCode2024
                 {
                     continue;
                 }
-                var temp2 = Blocks;
                 Blocks.Add(currentBlock);
                 bool? result = null;
                 var newLocations = new HashSet<Point>();
@@ -269,17 +267,13 @@ namespace AdventOfCode2024
 
                 if (result.Value)
                 {
-                    loops++;
+                    loopLocations.Add(currentBlock);
                 }
 
-                if (((double)i / locationCount * 100) % 10 == 0)
-                {
-                    Console.Write("X");
-                }
                 Blocks.Remove(currentBlock);
             }
             Console.WriteLine();
-            Console.WriteLine("Loop Locations: " + loops);
+            Console.WriteLine("Loop Locations: " + loopLocations.Count);
         }
     }
 
