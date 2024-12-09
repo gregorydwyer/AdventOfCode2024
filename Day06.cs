@@ -9,12 +9,12 @@ namespace AdventOfCode2024
         private const string Day = "Day06";
         private static readonly string FileLocation = Day + ".txt";
         private static readonly string TestFileLocation = Day + "test.txt";
-        private static Point Pos = new Point(0, 0);
+        private static Point Guard = new Point(0, 0);
         private const char Block = '#';
         private const char Visited = 'X';
         private const char GuardStart = '^';
         private static  Point StartingPoint;
-        private static List<Point> Locations = new List<Point>();
+        private static List<Point> OriginalGuardPath = new List<Point>();
         private static HashSet<Point> LoopLocations = new HashSet<Point>();
         private static HashSet<Point> Blocks = new HashSet<Point>();
         private static int MapWidth, MapHeight;
@@ -32,7 +32,7 @@ namespace AdventOfCode2024
             MapWidth = map[0].Length;
             MapHeight = map.Length;
             var uniquePoints = 0;
-            StartingPoint = new Point(Pos);
+            StartingPoint = new Point(Guard);
             while (MapContainsPos(map))
             {
                 if (SimpleMovePos(map))
@@ -46,106 +46,29 @@ namespace AdventOfCode2024
 
         private static bool MapContainsPos(char[][] map)
         {
-            return Pos.X >= 0 &&
-                   Pos.X < map[0].Length &&
-                   Pos.Y >= 0 &&
-                   Pos.Y < map.Length;
-        }
-
-        private static bool IsPotentialLoop(Point p)
-        {
-            switch (p.Dir)
-            {
-                case Direction.N:
-                    var north = Locations.Where(loc => loc.X == p.X && loc.Y > p.Y && loc.Dir == Direction.N);
-                    if (!north.Any())
-                    {
-                        return Locations.Contains(p);
-                    }
-                    foreach (var loc in north)
-                    {
-                        for (int i = p.Y - 1; i > loc.Y; i--)
-                        {
-                            if (Blocks.Contains(new Point(p.X, i)))
-                            {
-                                return Locations.Contains(p);
-                            }
-                        }
-                    }
-                    break;
-                case Direction.E:
-                    var east = Locations.Where(loc => loc.Y == p.Y && loc.X < p.X && loc.Dir == Direction.E);
-                    if (!east.Any())
-                    {
-                        return Locations.Contains(p);
-                    }
-                    foreach (var loc in east)
-                    {
-                        for (int i = p.X + 1; i < loc.X; i++)
-                        {
-                            if (Blocks.Contains(new Point(i, p.Y)))
-                            {
-                                return Locations.Contains(p);
-                            }
-                        }
-                    }
-                    break;
-                case Direction.S:
-                    var south = Locations.Where(loc => loc.X == p.X && loc.Y < p.Y && loc.Dir == Direction.N);
-                    if (!south.Any())
-                    {
-                        return Locations.Contains(p);
-                    }
-                    foreach (var loc in south)
-                    {
-                        for (int i = p.Y + 1; i < loc.Y; i++)
-                        {
-                            if (Blocks.Contains(new Point(p.X, i)))
-                            {
-                                return Locations.Contains(p);
-                            }
-                        }
-                    }
-                    break;
-                case Direction.W:
-                    var west = Locations.Where(loc => loc.Y == p.Y && loc.X > p.X && loc.Dir == Direction.W);
-                    if (!west.Any())
-                    {
-                        return Locations.Contains(p);
-                    }
-                    foreach (var loc in west)
-                    {
-                        for (int i = p.X - 1; i > loc.X; i--)
-                        {
-                            if (Blocks.Contains(new Point(i, p.Y)))
-                            {
-                                return Locations.Contains(p);
-                            }
-                        }
-                    }
-                    break;
-            }
-
-            return true;
+            return Guard.X >= 0 &&
+                   Guard.X < map[0].Length &&
+                   Guard.Y >= 0 &&
+                   Guard.Y < map.Length;
         }
 
         private static bool SimpleMovePos(char[][] map)
         {
-            Locations.Add(new Point(Pos));
-            switch (Pos.Dir)
+            OriginalGuardPath.Add(new Point(Guard));
+            switch (Guard.Dir)
             {
                 case Direction.N:
-                    if (Pos.Y - 1 < 0)
+                    if (Guard.Y - 1 < 0)
                     {
-                        Pos.Y--;
+                        Guard.Y--;
                         return false;
                     }
-                    if (map[Pos.Y - 1][Pos.X] != Block)
+                    if (map[Guard.Y - 1][Guard.X] != Block)
                     {
-                        Pos.Y--;
-                        if (map[Pos.Y][Pos.X] != Visited)
+                        Guard.Y--;
+                        if (map[Guard.Y][Guard.X] != Visited)
                         {
-                            map[Pos.Y][Pos.X] = Visited;
+                            map[Guard.Y][Guard.X] = Visited;
                             return true;
                         }
 
@@ -153,17 +76,17 @@ namespace AdventOfCode2024
                     }
                     break;
                 case Direction.E:
-                    if (Pos.X + 1 >= map[0].Length)
+                    if (Guard.X + 1 >= map[0].Length)
                     {
-                        Pos.X++;
+                        Guard.X++;
                         return false;
                     }
-                    if (map[Pos.Y][Pos.X + 1] != Block)
+                    if (map[Guard.Y][Guard.X + 1] != Block)
                     {
-                        Pos.X++;
-                        if (map[Pos.Y][Pos.X] != Visited)
+                        Guard.X++;
+                        if (map[Guard.Y][Guard.X] != Visited)
                         {
-                            map[Pos.Y][Pos.X] = Visited;
+                            map[Guard.Y][Guard.X] = Visited;
                             return true;
                         }
 
@@ -171,17 +94,17 @@ namespace AdventOfCode2024
                     }
                     break;
                 case Direction.S:
-                    if (Pos.Y + 1 >= map.Length)
+                    if (Guard.Y + 1 >= map.Length)
                     {
-                        Pos.Y++;
+                        Guard.Y++;
                         return false;
                     }
-                    if (map[Pos.Y + 1][Pos.X] != Block)
+                    if (map[Guard.Y + 1][Guard.X] != Block)
                     {
-                        Pos.Y++;
-                        if (map[Pos.Y][Pos.X] != Visited)
+                        Guard.Y++;
+                        if (map[Guard.Y][Guard.X] != Visited)
                         {
-                            map[Pos.Y][Pos.X] = Visited;
+                            map[Guard.Y][Guard.X] = Visited;
                             return true;
                         }
 
@@ -189,17 +112,17 @@ namespace AdventOfCode2024
                     }
                     break;
                 case Direction.W:
-                    if (Pos.X - 1 < 0)
+                    if (Guard.X - 1 < 0)
                     {
-                        Pos.X--;
+                        Guard.X--;
                         return false;
                     }
-                    if (map[Pos.Y][Pos.X - 1] != Block)
+                    if (map[Guard.Y][Guard.X - 1] != Block)
                     {
-                        Pos.X--;
-                        if (map[Pos.Y][Pos.X] != Visited)
+                        Guard.X--;
+                        if (map[Guard.Y][Guard.X] != Visited)
                         {
-                            map[Pos.Y][Pos.X] = Visited;
+                            map[Guard.Y][Guard.X] = Visited;
                             return true;
                         }
 
@@ -212,57 +135,57 @@ namespace AdventOfCode2024
             return SimpleMovePos(map);
         }
 
-        private static bool LoopCheckMovePos(List<Point> newLocs)
+        private static bool LoopCheckMovePos(HashSet<Point> newLocs)
         {
-            if (Locations.Contains(Pos) || newLocs.Contains(Pos))
+            if (OriginalGuardPath.Contains(Guard) || newLocs.Contains(Guard))
             {
                 // we've been here before. must be a loop.
                 return true;
             }
-            newLocs.Add(new Point(Pos));
-            switch (Pos.Dir)
+            newLocs.Add(new Point(Guard));
+            switch (Guard.Dir)
             {
                 case Direction.N:
-                    if (Pos.Y - 1 < 0)
+                    if (Guard.Y - 1 < 0)
                     {
                         return false;
                     }
-                    if (!Blocks.Contains(new Point(Pos.X, Pos.Y - 1)))
+                    if (!Blocks.Contains(new Point(Guard.X, Guard.Y - 1)))
                     {
-                        Pos.Y--;
+                        Guard.Y--;
                         return LoopCheckMovePos(newLocs);
                     }
                     break;
                 case Direction.E:
-                    if (Pos.X + 1 >= MapWidth)
+                    if (Guard.X + 1 >= MapWidth)
                     {
                         return false;
                     }
-                    if (!Blocks.Contains(new Point(Pos.X + 1, Pos.Y)))
+                    if (!Blocks.Contains(new Point(Guard.X + 1, Guard.Y)))
                     {
-                        Pos.X++;
+                        Guard.X++;
                         return LoopCheckMovePos(newLocs);
                     }
                     break;
                 case Direction.S:
-                    if (Pos.Y + 1 >= MapHeight)
+                    if (Guard.Y + 1 >= MapHeight)
                     {
                         return false;
                     }
-                    if (!Blocks.Contains(new Point(Pos.X, Pos.Y + 1)))
+                    if (!Blocks.Contains(new Point(Guard.X, Guard.Y + 1)))
                     {
-                        Pos.Y++;
+                        Guard.Y++;
                         return LoopCheckMovePos(newLocs);
                     }
                     break;
                 case Direction.W:
-                    if (Pos.X - 1 < 0)
+                    if (Guard.X - 1 < 0)
                     {
                         return false;
                     }
-                    if (!Blocks.Contains(new Point(Pos.X - 1, Pos.Y)))
+                    if (!Blocks.Contains(new Point(Guard.X - 1, Guard.Y)))
                     {
-                        Pos.X--;
+                        Guard.X--;
                         return LoopCheckMovePos(newLocs);
                     }
                     break;
@@ -274,7 +197,7 @@ namespace AdventOfCode2024
 
         private static void Turn()
         {
-            Pos.Dir = NextDirection(Pos.Dir);
+            Guard.Dir = NextDirection(Guard.Dir);
         }
 
         private static Direction NextDirection(Direction d)
@@ -284,7 +207,7 @@ namespace AdventOfCode2024
 
         private static char[][] BuildMap()
         {
-            using (var reader = Program.GetReader(FileLocation))
+            using (var reader = Program.GetReader(TestFileLocation))
             {
                 var mapList = new List<string>();
                 var currentLine = reader.ReadLine();
@@ -294,8 +217,8 @@ namespace AdventOfCode2024
                     var index = currentLine.IndexOf(GuardStart.ToString(), StringComparison.InvariantCulture);
                     if (index > 0)
                     {
-                        Pos.X = index;
-                        Pos.Y = mapList.Count - 1;
+                        Guard.X = index;
+                        Guard.Y = mapList.Count - 1;
                     }
 
                     for (var i = 0; i < currentLine.Length; i++)
@@ -317,25 +240,24 @@ namespace AdventOfCode2024
         public static void Problem2()
         {
             Console.WriteLine(Day + " P2");
-            Pos = new Point(StartingPoint);
             var loops = 0;
-            //Locations = Locations.Take(1660).ToList();
-            var locationCount = Locations.Count;
-            var nextBlock = Locations.Last();
-            for (int i = locationCount - 2; i > 0; i--)
+            var nextBlock = OriginalGuardPath[OriginalGuardPath.Count - 1];
+            OriginalGuardPath.RemoveAt(OriginalGuardPath.Count - 1);
+            var locationCount = OriginalGuardPath.Count;
+            for (int i = locationCount - 1; i > 0; i--)
             {
-                Pos = Locations[i];
-                if (Locations.Any(p => p.X == Pos.X && Pos.Y == p.Y && Pos.Dir != p.Dir))
+                Guard = OriginalGuardPath[i];
+                var currentBlock = new Point(nextBlock.X, nextBlock.Y);
+                if (OriginalGuardPath.Any(p => p.X == Guard.X && Guard.Y == p.Y && Guard.Dir != p.Dir))
                 {
-                    nextBlock = Locations[i];
-                    Locations.RemoveAt(i);
+                    nextBlock = OriginalGuardPath[i];
+                    OriginalGuardPath.RemoveAt(i);
                     continue;
                 }
-                var currentBlock = new Point(nextBlock.X, nextBlock.Y);
-                nextBlock = Locations[i];
-                Locations.RemoveAt(i);
+                nextBlock = OriginalGuardPath[i];
+                OriginalGuardPath.RemoveAt(i);
                 Blocks.Add(currentBlock);
-                if (LoopCheckMovePos(new List<Point>()))
+                if (LoopCheckMovePos(new HashSet<Point>()))
                 {
                     loops++;
                 }
