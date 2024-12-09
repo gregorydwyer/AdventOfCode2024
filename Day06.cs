@@ -135,9 +135,9 @@ namespace AdventOfCode2024
             return SimpleMovePos(map);
         }
 
-        private static bool LoopCheckMovePos(HashSet<Point> newLocs)
+        private static bool LoopCheckMovePos(HashSet<Point> oldLocs, HashSet<Point> newLocs)
         {
-            if (OriginalGuardPath.Contains(Guard) || newLocs.Contains(Guard))
+            if (oldLocs.Contains(Guard) || newLocs.Contains(Guard))
             {
                 // we've been here before. must be a loop.
                 return true;
@@ -153,7 +153,7 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X, Guard.Y - 1)))
                     {
                         Guard.Y--;
-                        return LoopCheckMovePos(newLocs);
+                        return LoopCheckMovePos(oldLocs, newLocs);
                     }
                     break;
                 case Direction.E:
@@ -164,7 +164,7 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X + 1, Guard.Y)))
                     {
                         Guard.X++;
-                        return LoopCheckMovePos(newLocs);
+                        return LoopCheckMovePos(oldLocs, newLocs);
                     }
                     break;
                 case Direction.S:
@@ -175,7 +175,7 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X, Guard.Y + 1)))
                     {
                         Guard.Y++;
-                        return LoopCheckMovePos(newLocs);
+                        return LoopCheckMovePos(oldLocs, newLocs);
                     }
                     break;
                 case Direction.W:
@@ -186,13 +186,13 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X - 1, Guard.Y)))
                     {
                         Guard.X--;
-                        return LoopCheckMovePos(newLocs);
+                        return LoopCheckMovePos(oldLocs, newLocs);
                     }
                     break;
             }
 
             Turn();
-            return LoopCheckMovePos(newLocs);
+            return LoopCheckMovePos(oldLocs, newLocs);
         }
 
         private static void Turn()
@@ -207,7 +207,7 @@ namespace AdventOfCode2024
 
         private static char[][] BuildMap()
         {
-            using (var reader = Program.GetReader(TestFileLocation))
+            using (var reader = Program.GetReader(FileLocation))
             {
                 var mapList = new List<string>();
                 var currentLine = reader.ReadLine();
@@ -241,28 +241,37 @@ namespace AdventOfCode2024
         {
             Console.WriteLine(Day + " P2");
             var loops = 0;
-            var nextBlock = OriginalGuardPath[OriginalGuardPath.Count - 1];
+            var nextBlock = new Point(OriginalGuardPath[OriginalGuardPath.Count - 1]);
+            var temp = OriginalGuardPath;
             OriginalGuardPath.RemoveAt(OriginalGuardPath.Count - 1);
+            var originalPathLocations = OriginalGuardPath.ToHashSet();
             var locationCount = OriginalGuardPath.Count;
             for (int i = locationCount - 1; i > 0; i--)
             {
-                Guard = OriginalGuardPath[i];
+                Guard = new Point(OriginalGuardPath[i]);
+                originalPathLocations.Remove(Guard);
+                originalPathLocations.Remove(nextBlock);
                 var currentBlock = new Point(nextBlock.X, nextBlock.Y);
-                if (OriginalGuardPath.Any(p => p.X == Guard.X && Guard.Y == p.Y && Guard.Dir != p.Dir))
+                nextBlock = new Point(OriginalGuardPath[i]);
+                OriginalGuardPath.RemoveAt(i);
+                if (OriginalGuardPath.Any(p => p.X == currentBlock.X && currentBlock.Y == p.Y))
                 {
-                    nextBlock = OriginalGuardPath[i];
-                    OriginalGuardPath.RemoveAt(i);
                     continue;
                 }
-                nextBlock = OriginalGuardPath[i];
-                OriginalGuardPath.RemoveAt(i);
+                var temp2 = Blocks;
                 Blocks.Add(currentBlock);
-                if (LoopCheckMovePos(new HashSet<Point>()))
+                if (LoopCheckMovePos( originalPathLocations, new HashSet<Point>()))
                 {
                     loops++;
                 }
+
+                if (((double)i / locationCount * 100) % 10 == 0)
+                {
+                    Console.Write("X");
+                }
                 Blocks.Remove(currentBlock);
             }
+            Console.WriteLine();
             Console.WriteLine("Loop Locations: " + loops);
         }
     }
