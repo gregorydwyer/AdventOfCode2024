@@ -135,7 +135,7 @@ namespace AdventOfCode2024
             return SimpleMovePos(map);
         }
 
-        private static bool LoopCheckMovePos(HashSet<Point> oldLocs, HashSet<Point> newLocs)
+        private static bool? LoopCheckMovePos(HashSet<Point> oldLocs, HashSet<Point> newLocs)
         {
             if (oldLocs.Contains(Guard) || newLocs.Contains(Guard))
             {
@@ -153,7 +153,7 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X, Guard.Y - 1)))
                     {
                         Guard.Y--;
-                        return LoopCheckMovePos(oldLocs, newLocs);
+                        return null;
                     }
                     break;
                 case Direction.E:
@@ -164,7 +164,7 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X + 1, Guard.Y)))
                     {
                         Guard.X++;
-                        return LoopCheckMovePos(oldLocs, newLocs);
+                        return null;
                     }
                     break;
                 case Direction.S:
@@ -175,7 +175,7 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X, Guard.Y + 1)))
                     {
                         Guard.Y++;
-                        return LoopCheckMovePos(oldLocs, newLocs);
+                        return null;
                     }
                     break;
                 case Direction.W:
@@ -186,13 +186,13 @@ namespace AdventOfCode2024
                     if (!Blocks.Contains(new Point(Guard.X - 1, Guard.Y)))
                     {
                         Guard.X--;
-                        return LoopCheckMovePos(oldLocs, newLocs);
+                        return null;
                     }
                     break;
             }
 
             Turn();
-            return LoopCheckMovePos(oldLocs, newLocs);
+            return null;
         }
 
         private static void Turn()
@@ -260,7 +260,14 @@ namespace AdventOfCode2024
                 }
                 var temp2 = Blocks;
                 Blocks.Add(currentBlock);
-                if (LoopCheckMovePos( originalPathLocations, new HashSet<Point>()))
+                bool? result = null;
+                var newLocations = new HashSet<Point>();
+                while (result == null)
+                {
+                    result = LoopCheckMovePos(originalPathLocations, newLocations);
+                }
+
+                if (result.Value)
                 {
                     loops++;
                 }
