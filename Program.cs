@@ -7,7 +7,7 @@ namespace AdventOfCode2024
     {
         private static void Main(string[] args)
         {
-            Day06.Run();
+            Day10.Run();
             Console.ReadKey();
         }
 
