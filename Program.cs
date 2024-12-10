@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 namespace AdventOfCode2024
@@ -7,7 +8,17 @@ namespace AdventOfCode2024
     {
         private static void Main(string[] args)
         {
+            //Day01.Run();
+            //Day02.Run();
+            //Day03.Run();
+            //Day04.Run();
+            //Day05.Run();
+            //Day06.Run();
+            //Day07.Run();
+            //Day08.Run();
+            //Day09.Run();
             Day10.Run();
+
             Console.ReadKey();
         }
 

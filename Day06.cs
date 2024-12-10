@@ -272,7 +272,6 @@ namespace AdventOfCode2024
 
                 Blocks.Remove(currentBlock);
             }
-            Console.WriteLine();
             Console.WriteLine("Loop Locations: " + loopLocations.Count);
         }
     }

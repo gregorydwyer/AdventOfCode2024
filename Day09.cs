@@ -118,12 +118,6 @@ namespace AdventOfCode2024
                     total += j * drive[j].Value;
                 }
             }
-
-            foreach (var item in drive)
-            {
-                Console.Write(item.HasValue ? item.ToString() : ".");
-            }
-            Console.WriteLine();
             Console.WriteLine("Total: " + total);
 
         }
@@ -134,20 +128,19 @@ namespace AdventOfCode2024
             {
                 var currentFile = Files.Pop();
                 var validSpace = Space.FirstOrDefault(space => space.Size >= currentFile.Size && space.Start < currentFile.Start);
-                var temp = Space.First();
                 if (validSpace != null)
                 {
-                    // do the swap
+                    // copy file to free space
                     for (int i = validSpace.Start; i < validSpace.Start + currentFile.Size; i++)
                     {
                         drive[i] = currentFile.Id;
                     }
-
+                    // clear the original file's space
                     for (int i = currentFile.Start; i < currentFile.Start + currentFile.Size; i++)
                     {
                         drive[i] = null;
                     }
-
+                    // update the open space markers
                     if (validSpace.Size == currentFile.Size)
                     {
                         Space.Remove(validSpace);
