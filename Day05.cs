@@ -14,13 +14,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 5: Print Queue ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             using (var reader = Program.GetReader(FileLocation))
             {
                 var total = 0;
@@ -57,7 +58,7 @@ namespace AdventOfCode2024
                     currentLine = reader.ReadLine();
                 }
 
-                Console.WriteLine("Total: " + total);
+                Program.WriteOutput("Total: " + total);
             }
         }
 
@@ -85,7 +86,7 @@ namespace AdventOfCode2024
 
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             using (var reader = Program.GetReader(FileLocation))
             {
                 var total = 0;
@@ -118,7 +119,7 @@ namespace AdventOfCode2024
                     currentLine = reader.ReadLine();
                 }
 
-                Console.WriteLine("Total: " + total);
+                Program.WriteOutput("Total: " + total);
 
             }
         }

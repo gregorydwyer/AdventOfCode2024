@@ -12,13 +12,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 1: Historian Hysteria ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             var col1 = new List<int>();
             var col2 = new List<int>();
             using (var sr = Program.GetReader(FileLocation))
@@ -39,14 +40,14 @@ namespace AdventOfCode2024
                     totalDistance += Math.Abs(col1[i] - col2[i]);
                 }
 
-                Console.WriteLine("Total Distance: "+totalDistance);
+                Program.WriteOutput("Total Distance: "+totalDistance);
             }
         }
 
 
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             var col1 = new List<int>();
             var dict = new Dictionary<int, int>();
             using (var sr = Program.GetReader(FileLocation))
@@ -76,7 +77,7 @@ namespace AdventOfCode2024
                     }
                 }
 
-                Console.WriteLine("Total Similarity: " + totalSimilarity);
+                Program.WriteOutput("Total Similarity: " + totalSimilarity);
             }
         }
     }

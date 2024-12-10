@@ -15,13 +15,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 4: Ceres Search ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             var grid = BuildGrid();
             var total = 0;
             for (int i = 0; i < grid.Count; i++)
@@ -34,7 +35,7 @@ namespace AdventOfCode2024
                     }
                 }
             }
-            Console.WriteLine("Total Instances: " + total);
+            Program.WriteOutput("Total Instances: " + total);
         }
 
         private static int CountXmasInstances(List<List<char>> grid, int r, int c)
@@ -166,7 +167,7 @@ namespace AdventOfCode2024
 
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             var grid = BuildGrid();
             var total = 0;
             for (int i = 0; i < grid.Count; i++)
@@ -179,7 +180,7 @@ namespace AdventOfCode2024
                     }
                 }
             }
-            Console.WriteLine("Total Instances: " + total);
+            Program.WriteOutput("Total Instances: " + total);
         }
 
         private static int MasInAnXInstances(List<List<char>> grid, int r, int c)

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 
 namespace AdventOfCode2024
@@ -13,13 +12,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 10: Hoof It ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             var map = BuildMap();
             var totalScore = 0;
             for (int r = 0; r < map.Count; r++)
@@ -34,7 +34,7 @@ namespace AdventOfCode2024
                     totalScore += ScoreTrailhead(r, c, map, false);
                 }
             }
-            Console.WriteLine("Total peaks score: "  + totalScore);
+            Program.WriteOutput("Total peaks score: "  + totalScore);
         }
 
         private static int ScoreTrailhead(int row, int col, List<List<int>> map, bool scoreByTrailCount)
@@ -109,7 +109,7 @@ namespace AdventOfCode2024
 
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             var map = BuildMap();
             var totalPaths = 0;
             for (int r = 0; r < map.Count; r++)
@@ -124,7 +124,7 @@ namespace AdventOfCode2024
                     totalPaths += ScoreTrailhead(r, c, map, true);
                 }
             }
-            Console.WriteLine("Total trail score: " + totalPaths);
+            Program.WriteOutput("Total trail score: " + totalPaths);
         }
     }
 

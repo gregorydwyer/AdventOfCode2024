@@ -14,13 +14,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 8: Resonant Collinearity ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             var map = BuildMap();
             var totalNodes = new HashSet<Point>();
             foreach (var freq in map)
@@ -49,7 +50,7 @@ namespace AdventOfCode2024
                 }
             }
 
-            Console.WriteLine("Total Antinodes: " + totalNodes.Count);
+            Program.WriteOutput("Total Antinodes: " + totalNodes.Count);
         }
 
         private static bool IsPointOnMap(Point p)
@@ -97,7 +98,7 @@ namespace AdventOfCode2024
 
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             var map = BuildMap();
             var totalNodes = new HashSet<Point>();
             foreach (var freq in map)
@@ -132,7 +133,7 @@ namespace AdventOfCode2024
                 }
             }
 
-            Console.WriteLine("Total Antinodes: " + totalNodes.Count);
+            Program.WriteOutput("Total Antinodes: " + totalNodes.Count);
         }
     }
 }

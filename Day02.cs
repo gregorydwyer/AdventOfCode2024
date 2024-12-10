@@ -12,13 +12,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 2: Red-Nosed Reports ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             using (var reader = Program.GetReader(FileLocation))
             {
                 var currentLine = reader.ReadLine();
@@ -34,7 +35,7 @@ namespace AdventOfCode2024
                     currentLine = reader.ReadLine();
                 }
 
-                Console.WriteLine("Safe Reports: " + safeReports);
+                Program.WriteOutput("Safe Reports: " + safeReports);
             }
         }
 
@@ -140,7 +141,7 @@ namespace AdventOfCode2024
         }
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             using (var reader = Program.GetReader(FileLocation))
             {
                 var currentLine = reader.ReadLine();
@@ -153,18 +154,18 @@ namespace AdventOfCode2024
                     if (CheckSafetyWithDamper(report))
                     {
                         safeReports++;
-                        //Console.WriteLine("Report " + rn + " is safe. [" + currentLine + "]");
+                        //Program.WriteOutput("Report " + rn + " is safe. [" + currentLine + "]");
                     }
                     else
                     {
-                        //Console.WriteLine("Report " + rn + " is unsafe. [" + currentLine + "]");
+                        //Program.WriteOutput("Report " + rn + " is unsafe. [" + currentLine + "]");
                     }
 
                     rn++;
                     currentLine = reader.ReadLine();
                 }
 
-                Console.WriteLine("Safe Reports: " + safeReports);
+                Program.WriteOutput("Safe Reports: " + safeReports);
             }
         }
     }

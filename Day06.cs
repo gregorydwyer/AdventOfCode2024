@@ -21,13 +21,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 6: Guard Gallivant ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             var map = BuildMap();
             MapWidth = map[0].Length;
             MapHeight = map.Length;
@@ -41,7 +42,7 @@ namespace AdventOfCode2024
                 }
             }
 
-            Console.WriteLine("Unique Points: " + uniquePoints);
+            Program.WriteOutput("Unique Points: " + uniquePoints);
         }
 
         private static bool MapContainsPos(char[][] map)
@@ -239,7 +240,7 @@ namespace AdventOfCode2024
 
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             var nextBlock = new Point(OriginalGuardPath[OriginalGuardPath.Count - 1]);
             var loopLocations = new HashSet<Point>();
             OriginalGuardPath.RemoveAt(OriginalGuardPath.Count - 1);
@@ -272,7 +273,7 @@ namespace AdventOfCode2024
 
                 Blocks.Remove(currentBlock);
             }
-            Console.WriteLine("Loop Locations: " + loopLocations.Count);
+            Program.WriteOutput("Loop Locations: " + loopLocations.Count);
         }
     }
 

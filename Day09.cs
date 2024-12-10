@@ -14,13 +14,14 @@ namespace AdventOfCode2024
 
         public static void Run()
         {
+            Program.WriteTitle("--- Day 9: Disk Fragmenter ---");
             Problem1();
             Problem2();
         }
 
         public static void Problem1()
         {
-            Console.WriteLine(Day + " P1");
+            Program.WriteProblemNumber("Part One");
             var drive = BuildDrive();
             SortDrive(drive);
             long total = 0;
@@ -31,7 +32,7 @@ namespace AdventOfCode2024
                 i++;
             }
 
-            Console.WriteLine("Total: " + total);
+            Program.WriteOutput("Total: " + total);
         }
 
         private static void SortDrive(List<int?> drive)
@@ -107,7 +108,7 @@ namespace AdventOfCode2024
 
         public static void Problem2()
         {
-            Console.WriteLine(Day + " P2");
+            Program.WriteProblemNumber("Part Two");
             var drive = BuildDrive();
             SortByFile(drive);
             long total = 0;
@@ -118,7 +119,7 @@ namespace AdventOfCode2024
                     total += j * drive[j].Value;
                 }
             }
-            Console.WriteLine("Total: " + total);
+            Program.WriteOutput("Total: " + total);
 
         }
 
