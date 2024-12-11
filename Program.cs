@@ -18,7 +18,7 @@ namespace AdventOfCode2024
             Day08.Run();
             Day09.Run();
             Day10.Run();
-
+            Day11.Run();
             Console.ReadKey();
         }
 
