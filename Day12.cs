@@ -12,10 +12,13 @@ namespace AdventOfCode2024
         private static readonly string TestFileLocation = Day + "test.txt";
         private static int Height;
         private static int Width;
+        private static long BasePrice = 0;
+        private static long DiscountedPrice = 0;
 
         public static void Run()
         {
             Program.WriteTitle("--- Day 12: Garden Groups ---");
+            DoCalculations();
             Problem1();
             Problem2();
         }
@@ -23,54 +26,19 @@ namespace AdventOfCode2024
         public static void Problem1()
         {
             Program.WriteProblemNumber("Part One");
-            var map = BuildMap();
-            var total = 0L;
-            var visited = new HashSet<Plot>();
-            var toVisit = new Stack<Plot>();
-            for (int r = 0; r < Height; r++)
-            {
-                for (int c = 0; c < Width; c++)
-                {
-                    if (visited.Contains(map[r][c]))
-                    {
-                        continue;
-                    }
-
-                    var area = 0;
-                    var perim = 0;
-                    toVisit.Push(map[r][c]);
-                    while (toVisit.Count > 0)
-                    {
-                        var plot = toVisit.Pop();
-                        if (visited.Contains(plot))
-                        {
-                            continue;
-                        }
-
-                        visited.Add(plot);
-                        foreach (var touched in plot.Touching)
-                        {
-                            if(!visited.Contains(touched))
-                            {
-                                toVisit.Push(touched);
-                            }
-                        }
-
-                        area++;
-                        perim += plot.Perimeter;
-                    }
-
-                    total += area * perim;
-                }
-            }
-            Program.WriteOutput("Total price: " + total);
+            Program.WriteOutput("Total price: " + BasePrice);
         }
 
         public static void Problem2()
         {
             Program.WriteProblemNumber("Part Two");
+            Program.WriteOutput("Discounted price: " + DiscountedPrice);
+
+        }
+
+        public static void DoCalculations()
+        {
             var map = BuildMap();
-            var total = 0L;
             var visited = new HashSet<Plot>();
             var toVisit = new Stack<Plot>();
             for (int r = 0; r < Height; r++)
@@ -84,6 +52,7 @@ namespace AdventOfCode2024
 
                     var area = 0;
                     var sides = 0;
+                    var perim = 0;
                     var verticals = new Dictionary<(int, Direction), List<int>>();
                     var horizontals = new Dictionary<(int, Direction), List<int>>();
                     toVisit.Push(map[r][c]);
@@ -130,6 +99,7 @@ namespace AdventOfCode2024
                             }
                             horizontals[(plot.Y + 1, Direction.S)].Add(plot.X);
                         }
+
                         foreach (var touched in plot.Touching)
                         {
                             if (!visited.Contains(touched))
@@ -137,6 +107,8 @@ namespace AdventOfCode2024
                                 toVisit.Push(touched);
                             }
                         }
+
+                        perim += plot.Perimeter;
                     }
 
                     foreach (var column in verticals)
@@ -168,10 +140,10 @@ namespace AdventOfCode2024
                         }
                     }
 
-                    total += area * sides;
+                    BasePrice += area * perim;
+                    DiscountedPrice += area * sides;
                 }
             }
-            Program.WriteOutput("Total price: " + total);
         }
 
         public static List<List<Plot>> BuildMap()
@@ -245,6 +217,7 @@ namespace AdventOfCode2024
                 return map;
             }
         }
+
     }
 
     public class Plot : Point

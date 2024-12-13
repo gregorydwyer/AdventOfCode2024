@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.IO;
 
 namespace AdventOfCode2024
@@ -20,6 +19,7 @@ namespace AdventOfCode2024
             Day10.Run();
             Day11.Run();
             Day12.Run();
+            Day13.Run();
             Console.ReadKey();
         }
 
