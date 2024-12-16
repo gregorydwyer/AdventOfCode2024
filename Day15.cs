@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using System.IO;
 using System.Linq;
+using System.Threading;
 
 namespace AdventOfCode2024
 {
@@ -212,7 +213,7 @@ namespace AdventOfCode2024
         #endregion
 
         #region Part 2
-        private static bool PartTwoMoveUp(List<List<char>> map, int x, int y)
+        private static bool PartTwoCanMoveUp(List<List<char>> map, int x, int y)
         {
             if (map[y][x] == '.')
             {
@@ -225,119 +226,164 @@ namespace AdventOfCode2024
             }
 
             if (map[y][x] == '[' &&
-                PartTwoMoveUp(map, x, y - 1) &&
-                PartTwoMoveUp(map, x + 1, y - 1))
+                PartTwoCanMoveUp(map, x, y - 1) &&
+                PartTwoCanMoveUp(map, x + 1, y - 1))
             {
+                return true;
+            }
+
+            if (map[y][x] == ']' &&
+                PartTwoCanMoveUp(map, x, y - 1) &&
+                PartTwoCanMoveUp(map, x - 1, y - 1))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool PartTwoCanMoveDown(List<List<char>> map, int x, int y)
+        {
+            if (map[y][x] == '.')
+            {
+                return true;
+            }
+
+            if (map[y][x] == '#')
+            {
+                return false;
+            }
+
+            if (map[y][x] == '[' &&
+                PartTwoCanMoveDown(map, x, y + 1) &&
+                PartTwoCanMoveDown(map, x + 1, y + 1))
+            {
+                return true;
+            }
+
+            if (map[y][x] == ']' &&
+                PartTwoCanMoveDown(map, x, y + 1) &&
+                PartTwoCanMoveDown(map, x - 1, y + 1))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool PartTwoCanMoveLeft(List<List<char>> map, int x, int y)
+        {
+            if (map[y][x] == '.')
+            {
+                return true;
+            }
+
+            if (map[y][x] == '#')
+            {
+                return false;
+            }
+
+            if (map[y][x] == ']' &&
+                PartTwoCanMoveLeft(map, x - 2, y) )
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static bool PartTwoCanMoveRight(List<List<char>> map, int x, int y)
+        {
+            if (map[y][x] == '.')
+            {
+                return true;
+            }
+
+            if (map[y][x] == '#')
+            {
+                return false;
+            }
+
+            if (map[y][x] == '[' &&
+                PartTwoCanMoveRight(map, x + 2, y))
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void PartTwoMoveUp(List<List<char>> map, int x, int y)
+        {
+            if (map[y][x] == '[')
+            {
+                PartTwoMoveUp(map, x, y - 1);
+                PartTwoMoveUp(map, x + 1, y - 1);
                 map[y][x] = '.';
                 map[y - 1][x] = '[';
                 map[y][x + 1] = '.';
                 map[y - 1][x + 1] = ']';
-                return true;
             }
-
-            if (map[y][x] == ']' &&
-                PartTwoMoveUp(map, x, y - 1) &&
-                PartTwoMoveUp(map, x - 1, y - 1))
+            else if (map[y][x] == ']')
             {
+                PartTwoMoveUp(map, x, y - 1);
+                PartTwoMoveUp(map, x - 1, y - 1);
                 map[y][x] = '.';
                 map[y - 1][x] = ']';
                 map[y][x - 1] = '.';
                 map[y - 1][x - 1] = '[';
-                return true;
             }
-
-            return false;
         }
 
-        private static bool PartTwoMoveDown(List<List<char>> map, int x, int y)
+        private static void PartTwoMoveDown(List<List<char>> map, int x, int y)
         {
-            if (map[y][x] == '.')
+            if (map[y][x] == '[')
             {
-                return true;
-            }
-
-            if (map[y][x] == '#')
-            {
-                return false;
-            }
-
-            if (map[y][x] == '[' &&
-                PartTwoMoveDown(map, x, y + 1) &&
-                PartTwoMoveDown(map, x + 1, y + 1))
-            {
+                PartTwoMoveDown(map, x, y + 1);
+                PartTwoMoveDown(map, x + 1, y + 1);
                 map[y][x] = '.';
                 map[y + 1][x] = '[';
                 map[y][x + 1] = '.';
                 map[y + 1][x + 1] = ']';
-                return true;
             }
-
-            if (map[y][x] == ']' &&
-                PartTwoMoveDown(map, x, y + 1) &&
-                PartTwoMoveDown(map, x - 1, y + 1))
+            else if (map[y][x] == ']')
             {
+                PartTwoMoveDown(map, x, y + 1);
+                PartTwoMoveDown(map, x - 1, y + 1);
                 map[y][x] = '.';
                 map[y + 1][x] = ']';
                 map[y][x - 1] = '.';
                 map[y + 1][x - 1] = '[';
-                return true;
             }
-
-            return false;
         }
 
-        private static bool PartTwoMoveLeft(List<List<char>> map, int x, int y)
+        private static void PartTwoMoveLeft(List<List<char>> map, int x, int y)
         {
-            if (map[y][x] == '.')
+            if (map[y][x] == ']')
             {
-                return true;
-            }
-
-            if (map[y][x] == '#')
-            {
-                return false;
-            }
-
-            if (map[y][x] == ']' &&
-                PartTwoMoveLeft(map, x - 2, y) )
-            {
+                PartTwoMoveLeft(map, x - 2, y);
                 map[y][x] = '.';
                 map[y][x - 2] = '[';
                 map[y][x - 1] = ']';
-                return true;
             }
-
-            return false;
         }
 
-        private static bool PartTwoMoveRight(List<List<char>> map, int x, int y)
+        private static void PartTwoMoveRight(List<List<char>> map, int x, int y)
         {
-            if (map[y][x] == '.')
+            if (map[y][x] == '[')
             {
-                return true;
-            }
-
-            if (map[y][x] == '#')
-            {
-                return false;
-            }
-
-            if (map[y][x] == '[' &&
-                PartTwoMoveRight(map, x + 2, y))
-            {
+                PartTwoMoveRight(map, x + 2, y);
                 map[y][x] = '.';
                 map[y][x + 2] = ']';
                 map[y][x + 1] = '[';
-                return true;
             }
-
-            return false;
         }
 
         private static void PartTwoMoveUp(List<List<char>> map)
         {
-            if (PartTwoMoveUp(map, Bot.X, Bot.Y - 1))
+            if (PartTwoCanMoveUp(map, Bot.X, Bot.Y - 1))
             {
+                PartTwoMoveUp(map, Bot.X, Bot.Y - 1);
                 map[Bot.Y][Bot.X] = '.';
                 Bot.Y--;
                 map[Bot.Y][Bot.X] = '@';
@@ -346,8 +392,9 @@ namespace AdventOfCode2024
 
         private static void PartTwoMoveDown(List<List<char>> map)
         {
-            if (PartTwoMoveDown(map, Bot.X, Bot.Y + 1))
+            if (PartTwoCanMoveDown(map, Bot.X, Bot.Y + 1))
             {
+                PartTwoMoveDown(map, Bot.X, Bot.Y + 1);
                 map[Bot.Y][Bot.X] = '.';
                 Bot.Y++;
                 map[Bot.Y][Bot.X] = '@';
@@ -356,8 +403,9 @@ namespace AdventOfCode2024
 
         private static void PartTwoMoveLeft(List<List<char>> map)
         {
-            if (PartTwoMoveLeft(map, Bot.X - 1, Bot.Y))
+            if (PartTwoCanMoveLeft(map, Bot.X - 1, Bot.Y))
             {
+                PartTwoMoveLeft(map, Bot.X - 1, Bot.Y);
                 map[Bot.Y][Bot.X] = '.';
                 Bot.X--;
                 map[Bot.Y][Bot.X] = '@';
@@ -366,8 +414,9 @@ namespace AdventOfCode2024
 
         private static void PartTwoMoveRight(List<List<char>> map)
         {
-            if (PartTwoMoveRight(map, Bot.X + 1, Bot.Y))
+            if (PartTwoCanMoveRight(map, Bot.X + 1, Bot.Y))
             {
+                PartTwoMoveRight(map, Bot.X + 1, Bot.Y);
                 map[Bot.Y][Bot.X] = '.';
                 Bot.X++;
                 map[Bot.Y][Bot.X] = '@';
@@ -392,24 +441,29 @@ namespace AdventOfCode2024
                 {
                     case '^':
                         PartTwoMoveUp(map);
+                        map[Bot.Y][Bot.X] = '^';
                         break;
                     case '>':
                         PartTwoMoveRight(map);
+                        map[Bot.Y][Bot.X] = '>';
                         break;
                     case 'v':
                         PartTwoMoveDown(map);
+                        map[Bot.Y][Bot.X] = 'v';
                         break;
                     case '<':
                         PartTwoMoveLeft(map);
+                        map[Bot.Y][Bot.X] = '<';
                         break;
                 }
-                Console.WriteLine("Move " + next + ":");
-                foreach (var line in map)
-                {
-                    Console.WriteLine(new string(line.ToArray()));
-                }
-                Console.WriteLine();
-                Console.ReadKey();
+
+                //Console.Clear();
+                //Console.WriteLine("Move " + next + ":");
+                //foreach (var line in map)
+                //{
+                //    Console.WriteLine(new string(line.ToArray()));
+                //}
+                //Thread.Sleep(200);
             }
 
             var total = 0L;
@@ -424,10 +478,10 @@ namespace AdventOfCode2024
                 }
             }
 
-            foreach (var line in map)
-            {
-                Console.WriteLine(new string(line.ToArray()));
-            }
+            //foreach (var line in map)
+            //{
+            //    Console.WriteLine(new string(line.ToArray()));
+            //}
             Program.WriteOutput("GPS Sum: " + total);
         }
 

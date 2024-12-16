@@ -202,7 +202,8 @@ namespace AdventOfCode2024
         public static void Problem2()
         {
             Program.WriteProblemNumber("Part Two");
-            MoveRobots(Width, Height, true);
+            Program.WriteOutput("Maually solved - Image on iteration: 6577");
+            //MoveRobots(Width, Height, true);
         }
 
         private static List<Robot> GetRobots()
