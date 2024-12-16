@@ -5,23 +5,31 @@ namespace AdventOfCode2024
 {
     public class Program
     {
+        private static readonly int[] Notes = { 392, 392, 392, 350, 330, 330, 294, 294, 262, 262, 294, 294, 330, 330, 262, 262,
+                                                294, 330, 350, 294, 330, 330, 330, 294, 262, 262, 247, 247, 262, 262, 262, 262};
+        private static int NoteIndex = 0;
         private static void Main(string[] args)
         {
-            //Day01.Run();
-            //Day02.Run();
-            //Day03.Run();
-            //Day04.Run();
-            //Day05.Run();
-            //Day06.Run();
-            //Day07.Run();
-            //Day08.Run();
-            //Day09.Run();
-            //Day10.Run();
-            //Day11.Run();
-            //Day12.Run();
-            //Day13.Run();
-            //Day14.Run();
+            Day01.Run();
+            Day02.Run();
+            Day03.Run();
+            Day04.Run();
+            Day05.Run();
+            Day06.Run();
+            Day07.Run();
+            Day08.Run();
+            Day09.Run();
+            Day10.Run();
+            Day11.Run();
+            Day12.Run();
+            Day13.Run();
+            Day14.Run();
             Day15.Run();
+            while (NoteIndex != 0)
+            {
+                Console.Beep(Notes[NoteIndex], 250);
+                NoteIndex = (NoteIndex + 1) % Notes.Length;
+            }
             Console.ReadKey();
         }
 
@@ -44,6 +52,8 @@ namespace AdventOfCode2024
 
         public static void WriteTitle(string title)
         {
+            Console.Beep(Notes[NoteIndex], 300);
+            NoteIndex = (NoteIndex + 1) % Notes.Length;
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine(title);
         }
