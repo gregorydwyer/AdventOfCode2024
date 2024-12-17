@@ -14,8 +14,10 @@ namespace AdventOfCode2024
         private const string Day = "Day16";
         private static readonly string FileLocation = Day + ".txt";
         private static readonly string TestFileLocation = Day + "test.txt";
+        private static int Width, Height;
         private static Location Start;
         private static Location End;
+        private static Graph<Location> Map;
 
         public static void Run()
         {
@@ -27,24 +29,154 @@ namespace AdventOfCode2024
         public static void Problem1()
         {
             Program.WriteProblemNumber("Part One");
-            var map = BuildMap();
+            Map = BuildMap();
+            var visited = new HashSet<Location>();
+            var fringe = new List<Location>();
+
+            fringe.Add(Start);
+            var isAtEnd = false;
+            while(fringe.Count > 0)
+            {
+                var current = fringe[0];
+                visited.Add(current);
+                fringe.RemoveAt(0);
+
+                var x = current.X;
+                var y = current.Y;
+                // N
+                if (!Map[x, y - 1].IsWall && !visited.Contains(Map[x,y - 1]))
+                {
+                    isAtEnd = isAtEnd || UpdateCost(current, Map[x, y - 1], Direction.N, fringe);
+                }
+                // E
+                if (!Map[x + 1, y].IsWall && !visited.Contains(Map[x + 1, y]))
+                {
+                    isAtEnd = isAtEnd || UpdateCost(current, Map[x + 1, y], Direction.E, fringe);
+                }
+                // S
+                if (!Map[x, y + 1].IsWall && !visited.Contains(Map[x, y + 1]))
+                {
+                    isAtEnd = isAtEnd || UpdateCost(current, Map[x, y + 1], Direction.S, fringe);
+                }
+                // W
+                if (!Map[x - 1, y].IsWall && !visited.Contains(Map[x - 1, y]))
+                {
+                    isAtEnd = isAtEnd || UpdateCost(current, Map[x - 1, y], Direction.W, fringe);
+                }
+
+                fringe.Sort();
+            }
+            Program.WriteOutput("Cheapest Path: " + End.Cost);
+            
+        }
+
+        private static bool UpdateCost(Location current, Location next, Direction dir, List<Location> fringe)
+        {
+            var newCost = GetCost(current, dir);
+           
+            if (newCost < next.Cost)
+            {
+                next.Dir = dir;
+                next.Cost = newCost;
+            }
+            fringe.Add(next);
+
+            return next.X == End.X && next.Y == End.Y;
+        }
+
+        private static long GetCost(Location c, Direction d)
+        {
+            return c.Cost + GetSingleMoveCost(c.Dir, d);
+        }
+
+        private static long GetSingleMoveCost(Direction c, Direction n)
+        {
+            return 1 + TurnsToDirection(c, n) * 1000;
+        }
+
+        private static int TurnsToDirection(Direction start, Direction end)
+        {
+            if (start == end)
+            {
+                return 0;
+            }
+            if(Math.Abs(start - end) == 2)
+            {
+                return 2;
+            }
+
+            return 1;
         }
 
         public static void Problem2()
         {
             Program.WriteProblemNumber("Part Two");
-            using (var reader = Program.GetReader(FileLocation))
-            {
+            var visited = new HashSet<Location>();
+            var fringe = new List<Location>();
 
+            fringe.Add(End);
+            Location prev = End;
+            while (fringe.Count > 0)
+            {
+                var current = fringe[0];
+                visited.Add(current);
+                fringe.RemoveAt(0);
+
+                var x = current.X;
+                var y = current.Y;
+                
+                // N
+                if (!Map[x, y - 1].IsWall && !visited.Contains(Map[x, y - 1]))
+                {
+                    if(current.Cost == GetCost(Map[x, y - 1], Direction.S) ||
+                        (prev.Dir == Direction.S && prev.Cost - 2 == Map[x, y - 1].Cost))
+                    {
+                        fringe.Add(Map[x, y - 1]);
+                    }
+                }
+                // E
+                if (!Map[x + 1, y].IsWall && !visited.Contains(Map[x + 1, y]))
+                {
+                    if (current.Cost == GetCost(Map[x + 1, y], Direction.W) ||
+                        (prev.Dir == Direction.W && prev.Cost - 2 == Map[x + 1, y].Cost))
+                    {
+                        fringe.Add(Map[x + 1, y]);
+                    }
+                }
+                // S
+                if (!Map[x, y + 1].IsWall && !visited.Contains(Map[x, y + 1]))
+                {
+                    if (current.Cost == GetCost(Map[x, y + 1], Direction.N) ||
+                        (prev.Dir == Direction.N && prev.Cost - 2 == Map[x, y + 1].Cost))
+                    {
+                        fringe.Add(Map[x, y + 1]);
+                    }
+                }
+                // W
+                if (!Map[x - 1, y].IsWall && !visited.Contains(Map[x - 1, y]))
+                {
+                    if (current.Cost == GetCost(Map[x - 1, y], Direction.E) ||
+                        (prev.Dir == Direction.E && prev.Cost - 2 == Map[x - 1, y].Cost))
+                    {
+                        fringe.Add(Map[x - 1, y]);
+                    }
+                }
+
+                prev = current;
+                fringe.Sort();
             }
+            
+            Program.WriteOutput("Seat Options: " + visited.Count);
+
         }
 
-        private static Graph BuildMap()
+        private static Graph<Location> BuildMap()
         {
             using (var reader = Program.GetReader(FileLocation))
             {
-                var map = new Graph();
+                var map = new Graph<Location>();
                 var currentLine = reader.ReadLine();
+                Width = currentLine.Length;
                 var y = -1;
                 while (currentLine != null)
                 {
@@ -71,7 +203,7 @@ namespace AdventOfCode2024
 
                     currentLine = reader.ReadLine();
                 }
-
+                Height = y + 1;
                 return map;
             }
         }
