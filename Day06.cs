@@ -138,12 +138,6 @@ namespace AdventOfCode2024
 
         private static bool? LoopCheckMovePos(HashSet<Point> oldLocs, HashSet<Point> newLocs)
         {
-            if (oldLocs.Contains(Guard) || newLocs.Contains(Guard))
-            {
-                // we've been here before. must be a loop.
-                return true;
-            }
-            newLocs.Add(new Point(Guard));
             switch (Guard.Dir)
             {
                 case Direction.N:
@@ -193,6 +187,12 @@ namespace AdventOfCode2024
             }
 
             Turn();
+            if (oldLocs.Contains(Guard) || newLocs.Contains(Guard))
+            {
+                // we've been here before. must be a loop.
+                return true;
+            }
+            newLocs.Add(Guard);
             return null;
         }
 
@@ -261,6 +261,7 @@ namespace AdventOfCode2024
                 Blocks.Add(currentBlock);
                 bool? result = null;
                 var newLocations = new HashSet<Point>();
+
                 while (result == null)
                 {
                     result = LoopCheckMovePos(originalPathLocations, newLocations);

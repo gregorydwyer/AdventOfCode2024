@@ -11,24 +11,25 @@ namespace AdventOfCode2024
         private const bool MusicEnabled = false;
         private static void Main(string[] args)
         {
-            //Day01.Run();
-            //Day02.Run();
-            //Day03.Run();
-            //Day04.Run();
-            //Day05.Run();
-            //Day06.Run();
-            //Day07.Run();
-            //Day08.Run();
-            //Day09.Run();
-            //Day10.Run();
-            //Day11.Run();
-            //Day12.Run();
-            //Day13.Run();
-            //Day14.Run();
-            //Day15.Run();
-            //Day16.Run();
+            Day01.Run();
+            Day02.Run();
+            Day03.Run();
+            Day04.Run();
+            Day05.Run();
+            Day06.Run();
+            Day07.Run();
+            Day08.Run();
+            Day09.Run();
+            Day10.Run();
+            Day11.Run();
+            Day12.Run();
+            Day13.Run();
+            Day14.Run();
+            Day15.Run();
+            Day16.Run();
             Day17.Run();
-            if(MusicEnabled)
+            Day18.Run();
+            if (MusicEnabled)
             {
                 while (NoteIndex != 0)
                 {
@@ -60,7 +61,7 @@ namespace AdventOfCode2024
         {
             if(MusicEnabled)
             {
-                Console.Beep(Notes[NoteIndex], 300);
+                Console.Beep(Notes[NoteIndex], 400);
                 NoteIndex = (NoteIndex + 1) % Notes.Length;
             }
             Console.ForegroundColor = ConsoleColor.DarkGreen;

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.CodeDom;
 using System.Collections.Generic;
-using System.Data;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
@@ -67,13 +66,13 @@ namespace AdventOfCode2024
                 fringe.Sort();
             }
             Program.WriteOutput("Cheapest Path: " + End.Cost);
-            
+
         }
 
         private static bool UpdateCost(Location current, Location next, Direction dir, List<Location> fringe)
         {
             var newCost = GetCost(current, dir);
-           
+
             if (newCost < next.Cost)
             {
                 next.Dir = dir;
@@ -124,7 +123,7 @@ namespace AdventOfCode2024
 
                 var x = current.X;
                 var y = current.Y;
-                
+
                 // N
                 if (!Map[x, y - 1].IsWall && !visited.Contains(Map[x, y - 1]))
                 {
@@ -165,7 +164,7 @@ namespace AdventOfCode2024
                 prev = current;
                 fringe.Sort();
             }
-            
+
             Program.WriteOutput("Seat Options: " + visited.Count);
 
         }
@@ -212,13 +211,15 @@ namespace AdventOfCode2024
     [SuppressMessage("ReSharper", "InconsistentNaming")]
     public class Graph<T>
     {
-        private readonly Dictionary<(int,int), T> map = new Dictionary<(int, int), T>();
+        private readonly Dictionary<(int,int), T> Map = new Dictionary<(int, int), T>();
+        public int Height,Width;
+
 
         public T this[int x, int y]
         {
             get
             {
-                if (map.TryGetValue((x, y), out var loc))
+                if (Map.TryGetValue((x, y), out var loc))
                 {
                     return loc;
                 }
@@ -227,16 +228,22 @@ namespace AdventOfCode2024
             }
             set
             {
-                if (map.ContainsKey((x, y)))
+                if (Map.ContainsKey((x, y)))
                 {
-                    map[(x, y)] = value;
+                    Map[(x, y)] = value;
                 }
                 else
                 {
-                    map.Add((x,y), value);
+                    Map.Add((x,y), value);
                 }
             }
         }
+
+        public Dictionary<(int X,int Y),T> GetSource()
+        {
+            return Map;
+        }
+
     }
 
     public class Location : Point, IComparable<Location>

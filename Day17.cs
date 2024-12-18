@@ -8,9 +8,9 @@ namespace AdventOfCode2024
         private const string Day = "Day17";
         private static readonly string FileLocation = Day + ".txt";
         private static readonly string TestFileLocation = Day + "test.txt";
-        private static int A, B, C;
+        private static long A, B, C;
         private static int Pointer;
-        private static List<int> Output = new List<int>();
+        private static List<long> Output = new List<long>();
 
         public static void Run()
         {
@@ -34,34 +34,43 @@ namespace AdventOfCode2024
         {
             Program.WriteProblemNumber("Part Two");
             var program = BuildProgram();
-            var programString = string.Join(",", program);
+            var programString = string.Join("",program);
+            var matches = new List<List<long>>();
+            matches.Add(new List<long>(){0});
             var match = false;
-            var nextA = -1;
-            while (!match)
+            var rounds = 0;
+            while (rounds < 4)
             {
-                nextA++;
-                A = nextA;
-                B = C = 0;
-                Pointer = 0;
-                Output.Clear();
-                
-                while(Pointer < program.Count)
+                matches.Add(new List<long>());
+                matches[rounds].Sort();
+                var offset = matches[rounds][0] << 12;
+                var currentString = programString.Substring(programString.Length - 4 * (rounds + 1));
+                for (long a = 0; a < 4096; a++)
                 {
-                    RunOpCode(program[Pointer], program[Pointer + 1]);
-                    if(!programString.StartsWith(string.Join(",", Output)))
+
+                    A = a + offset;
+                    B = C = 0;
+                    Pointer = 0;
+                    Output.Clear();
+                    while (Pointer < program.Count)
                     {
-                        break;
+                        RunOpCode(program[Pointer], program[Pointer + 1]);
+                        if (!currentString.StartsWith(string.Join("", Output)))
+                        {
+                            break;
+                        }
+                    }
+
+                    if (currentString.Equals(string.Join("", Output)))
+                    {
+                        matches[rounds + 1].Add(a + offset);
                     }
                 }
-
-                match = programString.Equals(string.Join(",", Output));
-                if (nextA % 1000000 == 0)
-                {
-                    Console.Write("*");
-                }
+                rounds++;
             }
-            Console.WriteLine();
-            Program.WriteOutput("Match when A = " + (nextA - 1));
+
+            matches[4].Sort();
+            Program.WriteOutput("Lowest Match: " + matches[4][0]);
         }
 
         private static void RunOpCode(int opCode, int operand)
@@ -85,7 +94,7 @@ namespace AdventOfCode2024
                     }
                     break;
                 case 4: //bxc
-                    B = B ^ C; 
+                    B = B ^ C;
                     break;
                 case 5: //out
                     Output.Add(GetComboOperand(operand) % 8);
@@ -100,9 +109,9 @@ namespace AdventOfCode2024
             Pointer += 2;
         }
 
-        private static int GetComboOperand(int operand)
+        private static long GetComboOperand(int operand)
         {
-            var value = 0;
+            var value = 0L;
             switch (operand)
             {
                 case 4:
@@ -116,7 +125,6 @@ namespace AdventOfCode2024
                     break;
                 case 7:
                     throw new InvalidProgramException();
-                    break;
                 default:
                     value = operand;
                     break;
