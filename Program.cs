@@ -5,10 +5,6 @@ namespace AdventOfCode2024
 {
     public class Program
     {
-        private static readonly int[] Notes = { 392, 392, 392, 350, 330, 330, 294, 294, 262, 262, 294, 294, 330, 330, 262, 262,
-                                                294, 330, 350, 294, 330, 330, 330, 294, 262, 262, 247, 247, 262, 262, 262, 262};
-        private static int NoteIndex = 0;
-        private const bool MusicEnabled = false;
         private static void Main(string[] args)
         {
             Day01.Run();
@@ -29,14 +25,6 @@ namespace AdventOfCode2024
             Day16.Run();
             Day17.Run();
             Day18.Run();
-            if (MusicEnabled)
-            {
-                while (NoteIndex != 0)
-                {
-                    Console.Beep(Notes[NoteIndex], 300);
-                    NoteIndex = (NoteIndex + 1) % Notes.Length;
-                }
-            }
             Console.ReadKey();
         }
 
@@ -59,11 +47,6 @@ namespace AdventOfCode2024
 
         public static void WriteTitle(string title)
         {
-            if(MusicEnabled)
-            {
-                Console.Beep(Notes[NoteIndex], 400);
-                NoteIndex = (NoteIndex + 1) % Notes.Length;
-            }
             Console.ForegroundColor = ConsoleColor.DarkGreen;
             Console.WriteLine(title);
         }

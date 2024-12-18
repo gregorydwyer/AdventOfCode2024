@@ -96,10 +96,12 @@ namespace AdventOfCode2024
         private static void MoveRobots(int width, int height, bool print)
         {
             var robots = GetRobots();
-            long q1, q2, q3, q4;
-            q1 = q2 = q3 = q4 = 0;
+            var avgX = 0.0;
+            var avgY = 0.0;
             for (int i = 0; i < 7000; i++)
             {
+                var runX = 0.0;
+                var runY = 0.0;
                 foreach (var robot in robots)
                 {
                     robot.Loc.X += robot.Vec.X;
@@ -123,86 +125,43 @@ namespace AdventOfCode2024
                     {
                         robot.Loc.Y -= height;
                     }
+
+                    runX = (runX + robot.Loc.X);
+                    runY = (runY + robot.Loc.Y);
+
                 }
-                if (i > 5000 && i < 7000)
+
+                runX /= robots.Count;
+                runY /= robots.Count;
+
+                if ( i > 500 &&
+                    (runX / (avgX / i) < .90  || runX / (avgX / i) > 1.1)
+                    &&
+                    (runY / (avgY / i) < .90 || runY / (avgY / i) > 1.1))
                 {
-                    var tree = false;
-                    foreach (var robot in robots)
-                    {
-                        var line = true;
-                        for (int j = 0; j < 8; j++)
-                        {
-                            if (!robots.Any(r => r.Loc.Equals(new Point(robot.Loc.X, robot.Loc.Y + j))))
-                            {
-                                line = false;
-                            }
-
-                            if (!line)
-                            {
-                                break;
-                            }
-                        }
-
-                        if (line)
-                        {
-                            Console.WriteLine(i);
-                            tree = true;
-                        }
-                    }
-
-                    if (tree && print)
+                    Program.WriteOutput("Tree at iteration: " + (i + 1));
+                    if (print)
                     {
                         var bitmap = new Bitmap(width, height);
-                        foreach (var robot in robots)
+                        foreach (var bot in robots)
                         {
-                            bitmap.SetPixel(robot.Loc.X, robot.Loc.Y, Color.CadetBlue);
+                            bitmap.SetPixel(bot.Loc.X, bot.Loc.Y, Color.CadetBlue);
                         }
 
                         bitmap.Save("Robots" + i + ".bmp");
                     }
+                    return;
                 }
-            }
-            Console.WriteLine("finished");
-            //foreach (var robot in robots)
-            //{
-            //    if (robot.Loc.X < width / 2)
-            //    {
-            //        //Left
-            //        if (robot.Loc.Y < height / 2)
-            //        {
-            //            //Top
-            //            q1++;
-            //        }
-            //        else if (robot.Loc.Y >= (height / 2) + 1)
-            //        {
-            //            //Bottom
-            //            q3++;
-            //        }
-            //    }
-            //    else if ((robot.Loc.X >= (width / 2) + 1))
-            //    {
-            //        //Right
-            //        if (robot.Loc.Y < height / 2)
-            //        {
-            //            //Top
-            //            q2++;
-            //        }
-            //        else if (robot.Loc.Y >= (height / 2) + 1)
-            //        {
-            //            //Bottom
-            //            q4++;
-            //        }
-            //    }
-            //}
 
-            //Program.WriteOutput("Safety Factor: " + (q1 * q2 * q3 * q4));
+                avgX += runX;
+                avgY += runY;
+            }
         }
 
         public static void Problem2()
         {
             Program.WriteProblemNumber("Part Two");
-            Program.WriteOutput("Maually solved - Image on iteration: 6577");
-            //MoveRobots(Width, Height, true);
+            MoveRobots(Width, Height, false);
         }
 
         private static List<Robot> GetRobots()
