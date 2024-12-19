@@ -25,6 +25,7 @@ namespace AdventOfCode2024
             Day16.Run();
             Day17.Run();
             Day18.Run();
+            Day19.Run();
             Console.ReadKey();
         }
 
@@ -53,13 +54,13 @@ namespace AdventOfCode2024
 
         public static void WriteProblemNumber(string problemNumber)
         {
-            Console.ForegroundColor = ConsoleColor.Gray;
+            Console.ForegroundColor = ConsoleColor.DarkRed;
             Console.WriteLine(problemNumber);
         }
 
         public static void WriteOutput(string output)
         {
-            Console.ForegroundColor = ConsoleColor.DarkRed;
+            Console.ForegroundColor = ConsoleColor.Gray;
             Console.WriteLine(output);
         }
     }
